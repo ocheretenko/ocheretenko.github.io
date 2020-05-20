@@ -1,0 +1,111 @@
+<html>
+<head>
+<title>Printer Script</title>
+</head>
+
+<body>
+<input type="number" id="from" placeholder="from">
+<input type="number" id="to" placeholder="to">
+<input type="number" id="filler" placeholder="filler page #">
+<br>
+<button onclick="calculate();">Calculate</button>
+<br><br>
+<input type="text" id ="output1" readonly placeholder="output1">
+<button onclick="copy('output1');">copy</button>
+<br>
+
+<input type="text" id ="output2" readonly placeholder="output2">
+<button onclick="copy('output2');">copy</button>
+</textarea>
+</body>
+
+<script>
+
+function calculate()
+{
+   document.getElementById('output1').value = '';
+   document.getElementById('output2').value = '';
+
+   var varfrom = parseInt( document.getElementById("from").value );
+   var varto = parseInt( document.getElementById("to").value );
+   var varfiller = parseInt( document.getElementById("filler").value );
+   var varquantity = varto - varfrom + 1;
+   var output1 = document.getElementById('output1');
+   var output2 = document.getElementById('output2');
+
+// :: exceptions begin ::
+
+if (varfrom == 0 || to == 0)
+{
+   alert("error:\r\n 'from' = N/A or\r\n  'to' = N/A");
+   return;
+}
+
+   if (varfrom > varto)
+{
+   alert("error: from > to");
+   return;
+}
+
+if (varquantity < 3)
+{
+   alert("eror: quantity is too low");
+   return;
+}
+
+   if (varquantity % 4 > 0 && (isNaN(varfiller) || varfiller < 1) )
+{
+   alert("error: "+ varquantity +" % 4 > 0. filler required");
+   return;
+}
+// :: exceptions end ::
+
+// :: making number lists ::
+
+   array0 = [];
+
+   for (i = varfrom; i <= varto; i++) array0.push(i);
+   
+   while (array0.length % 4 > 0)
+      array0.push(varfiller);
+
+   varquantity = array0.length;
+   array1 = array0.slice(0, varquantity/2);
+   array2 = array0.slice(varquantity/2).reverse();
+ 
+
+// :: joining the lists ::
+out1 = [];
+out2 = [];
+   for (i =0; i < array1.length; i++)
+{
+   if (!(i % 2 > 0))
+   {
+     out1.push( array2[i]);
+     out1.push( array1[i]);
+   }
+   else
+   {
+     out2.push( array2[i]);
+     out2.push( array1[i]);
+   }
+   out2 = out2.reverse();
+}
+// :: done ::
+
+  output1.value = out1.join(',');
+  output2.value = out2.join(',');
+}
+
+function copy(x)
+{
+  elem = document.getElementById(x);
+  elem.select();
+  elem.setSelectionRange(0, 99999); /*For mobile devices*/
+  document.execCommand("copy");
+
+}
+
+</script>
+
+</html>
